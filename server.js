@@ -1,9 +1,11 @@
 'use strict';
 
+const ConnectionManager = require('./src/connection-manager');
+
 const express = require('express');
 const socketIO = require('socket.io');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const INDEX = '/index.html';
 
 const server = express()
@@ -12,9 +14,4 @@ const server = express()
 
 const io = socketIO(server);
 
-io.on('connection', (socket) => {
-  console.log('Client connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
-});
-
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+io.on('connection', (socket) => ConnectionManager.handleConnection(socket));
